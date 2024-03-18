@@ -1,10 +1,11 @@
-function [scenes, OMEdata] = importZeissStack(dataPath, fileName, varargin)
+function [scenes, imageInfo] = importZeissStack(dataPath, fileName, varargin)
 %% IMPORTZEISSSTACK imports a Zeiss LSM image stack based on bioformats toolboxes.
 %%
 %% Input: path to the image file, filename; optional: channel to import
-%% Output: image stack as a SINGLE 3D matrix; if channel is specified, only the specified channel is imported.
+%% Output: scenes: image stacks
 %%         imageInfo: a structure containing the image information from file metadata
-
+% Note: currently metadata is given for first image with the assumption
+% that everything is same in all scenes
 %% check input
 
 if nargin < 2
@@ -18,7 +19,7 @@ else
 end
 
 scenes = [];
-OMEdata = [];
+imageInfo = [];
 
 % create full file path from dataPath and fileName
 fileString = fullfile(dataPath, fileName);
@@ -39,9 +40,14 @@ if isempty(data)
 end
 
 % read metadata to find out how many scenes / positions there are
-OMEdata = GetOMEData(fileString);
-nImagesInStack = OMEdata.SizeZ;
-nSCENES = OMEdata.SeriesCount;
+imageInfo = GetOMEData(fileString);
+[laserWL, laserPower, zoomInfo] =  getZeissMetadata(data{1, 2}); % the Zeiss-specific data are here
+imageInfo.zoom = zoomInfo;
+imageInfo.LaserPower = laserPower;
+imageInfo.LaserWL = laserWL;
+
+nImagesInStack = imageInfo.SizeZ;
+nSCENES = imageInfo.SeriesCount;
 nImagesTotal = nImagesInStack * nSCENES;
 
 disp(['Loaded czi file ' fileName ' with ' num2str(nSCENES) ' slices/series']);

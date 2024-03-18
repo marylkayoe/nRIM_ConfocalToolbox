@@ -1,5 +1,5 @@
 function R = makeSlideOverviewPlot(slideImageData, varargin)
-%% this function will take image data opened from a CZI file
+% this function will take image data opened from a CZI file
 % and will  generate a collage image where each of the stacks in the slide data
 % is presented by a single image.
 % the single image is max projected (default) and then the images are arranged in a
@@ -19,7 +19,7 @@ p.addRequired('slideImageData', @(x) iscell(x));
 % optional input
 p.addParameter('maxProject', true, @islogical);
 p.addParameter('gridLayout', [], @isnumeric);
-p.addParameter('imageInfo', [], @isstruct)
+p.addParameter('metaData', [], @isstruct)
 
 % parse the input
 p.parse(slideImageData, varargin{:});
@@ -73,9 +73,11 @@ for slice = 1:nSLICES
     text((col - 1) * size(slideOverview{1}, 2) + 10, (row - 1) * size(slideOverview{1}, 1) + 200, ['slice ' num2str(slice)], 'Color', 'r', 'FontSize', 20);
 end
 
-if isempty(p.Results.imageInfo)
+if isempty(p.Results.metaData)
 else
-    [xyResolution, zResolution] = getPixelResolution(p.Results.imageInfo);
+    metaData = p.Results.metaData;
+    % scale bar
+    [xyResolution, zResolution] = getPixelResolution(metaData);
     % draw scale bar at the bottom right of the image
     scaleBarLength = 500; % in microns
     scaleBarWidth = 100; % in pixels
@@ -84,10 +86,15 @@ else
    
     %draw rectangle
     rectangle('Position', [scaleBarStartX, scaleBarStartY, scaleBarLength / xyResolution, scaleBarWidth], 'FaceColor', 'white', 'EdgeColor', 'r', 'LineWidth', 1);
-
-
-
     text(scaleBarStartX + scaleBarLength / xyResolution / 2, scaleBarStartY - 250, [num2str(scaleBarLength) ' \mum'], 'Color', 'r', 'FontSize', 20);
+
+    % add title
+    % format: filename - objective - zoom - excitationWL - laserpower - date
+    % e.g. '2018-01-01_10-00-00.czi - 20x - 1.0x zoom  - 488nm - 0.03% - 2018-01-01'
+    titleString = [metaData.Filename '-' num2str(metaData.ObjMag) 'x-' num2str(metaData.zoom) 'x-Ex: ' num2str(metaData.LaserWL) '-power: ' num2str(metaData.LaserPower)];
+    titleString = cleanUnderscores(titleString);
+    title(titleString, 'FontSize', 10);
+
 
 
 end
