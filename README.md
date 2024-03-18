@@ -15,6 +15,10 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
     - [Installation](#installation)
   - [Components](#components)
     - [FileHandling](#filehandling)
+      - [importZeissStack.m](#importzeissstackm)
+      - [getZeissMetadata.m](#getzeissmetadatam)
+    - [Visualization](#visualization)
+      - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
 
 ## Getting Started
 
@@ -40,7 +44,7 @@ Statistics and Machine Learning Toolbox
 
 #### Other packages:
  will add here links to other packages that are used in the toolbox
- 
+
 
 ### Installation
 
@@ -55,5 +59,53 @@ addpath(genpath('path\to\nRIM_ConfocalToolbox'))
 ### FileHandling
 These functions are used to read microscopy files into MATLAB so that they can be processed.
 
+#### importZeissStack.m
+This function reads a ZEISS CZI file and returns a 3D matrix of the image data. 
+If the file contains multiple stacks ("scenes"), the result will be a cell array of 3D matrices. 
+The function will also return some acquisition metadata for the file.
+**Note**: the metadata is extracted from the first scene only. 
 
+Currently the metadata includes (not exclusive):
+- SeriesCount: how many scenes the file contains
+- SizeX, SizeY: the dimensions of the image
+- SizeZ: the number of z-slices
+- ScaleX, ScaleY: size of pixels in microns
+- ScaleZ: size of z-steps in microns
+- ObjMag: objective magnification
+- zoom: magnification zoom
+- ObjNA: objective numerical aperture
+- LaserWL: laser wavelength (nm)
+- LaserPower: laser power (%)
+- AcqDate: acquisition date
+
+**example use** 
 ```matlab
+
+[scenes, metadata] = importZeissStack(datafolderpath, filename);
+```
+
+#### getZeissMetadata.m
+This function parses the hashtable metadata found in the ZEISS CZI file opened with bfopen.
+The function returns a struct containing the metadata. 
+
+### Visualization
+These functions are used to visualize the image data in MATLAB.
+
+#### makeSlideOverviewPlot.m
+This function is meant for visualizing all slices imaged on a slide.
+The function takes a 3D matrix of the image data and a struct of metadata as input.
+The function will return a figure with a plot of the image data, with slices labelled and a scale bar.
+
+Scale and other information is extracted from the metadata struct.
+
+By default the images are shown as std projections, but you can also specify to show max projections by setting the 'maxProject' parameter to true.
+
+You can specify the grid layout of the resulting image so that it matches the physical layout of the slide.
+**note** this works well only if your slide is imaged in a grid pattern with no missing slices.
+
+**example use** 
+```matlab
+makeSlideOverviewPlot(scenes, 'metaData', metadata, 'gridLayout', [2, 4], 'maxProject', true);
+ 
+
+```

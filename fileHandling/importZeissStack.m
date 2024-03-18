@@ -41,10 +41,11 @@ end
 
 % read metadata to find out how many scenes / positions there are
 imageInfo = GetOMEData(fileString);
-[laserWL, laserPower, zoomInfo] =  getZeissMetadata(data{1, 2}); % the Zeiss-specific data are here
+[laserWL, laserPower, zoomInfo, dateInfo] =  getZeissMetadata(data{1, 2}); % the Zeiss-specific data are here
 imageInfo.zoom = zoomInfo;
 imageInfo.LaserPower = laserPower;
 imageInfo.LaserWL = laserWL;
+imageInfo.acqDate = dateInfo;
 
 nImagesInStack = imageInfo.SizeZ;
 nSCENES = imageInfo.SeriesCount;

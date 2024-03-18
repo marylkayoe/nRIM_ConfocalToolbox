@@ -1,4 +1,4 @@
-function [laserWL, laserPower, zoomInfo] = getZeissMetadata(metadata)
+function [laserWL, laserPower, zoomInfo, dateInfo] = getZeissMetadata(metadata)
 %% zoom factor
 
 zoomInfoKey = 'Global Information|Image|Channel|LaserScanInfo|ZoomX #1';
@@ -50,4 +50,23 @@ if metadata.containsKey(laserWLkey)
 else
     disp('LaserWL information not found in metadata.');
 end
+% date created:
+% the metadata string is in form "2024-03-15T11:15:38"
+
+dateKey = 'Global Information|Document|CreationDate #1';
+if metadata.containsKey(dateKey)
+    dateInfo = metadata.get(dateKey);
+    % we want to extract the date only by splitting at 'T'
+    dateInfo = strsplit(dateInfo, 'T');
+    dateInfo = dateInfo{1};
+    
+
+
+    
+else
+    disp('Creation information not found in metadata.');
+end
+
+
+
 
