@@ -107,7 +107,13 @@ By default the images are shown as std projections, but you can also specify to 
 You can specify the grid layout of the resulting image so that it matches the physical layout of the slide.
 **note** this works well only if your slide is imaged in a grid pattern with no missing slices.
 
-Finally, the overview image is saved as a tiff file 
+Finally, the overview image is saved as a png file, with the same name as the input, in the same folder.
+By default the overview image is downsampled 2x to reduce file size. 
+
+Example output image:
+![example output](assets/output-overviewthumnails.pngoutput-overviewthumbnails.png)
+
+
 
 **example use** 
 ```matlab

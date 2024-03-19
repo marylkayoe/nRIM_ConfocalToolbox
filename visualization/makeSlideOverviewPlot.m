@@ -19,15 +19,11 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
     % function importZeissStack
 
     % example use:
-    % makeSlideOverviewPlot(slideImageData, 'maxProject', true, 'gridLayout', [2 3], 'metaData', imageInfo)
+    % makeSlideOverviewPlot(slideImageData, 'maxProject', true, 'gridLayout', [2 3], 'metaData', imageInfo, 'downsample', 0.5);
 
     %% some constant parameters for the visualization:
-    % change if needed
-
     LABELFONTSIZE = 200;
     LABELCOLOR = 'white';
-
-    DOWNSAMPLE = true;
 
     % parse input
     p = inputParser;
@@ -39,6 +35,7 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
     p.addParameter('maxProject', true, @islogical);
     p.addParameter('gridLayout', [], @isnumeric);
     p.addParameter('metaData', [], @isstruct)
+    p.addParameter('downsample', 0.5, @isnumeric); % downsample the image by this factor (0.5 = half size)
 
     % parse the input
     p.parse(slideImageData, varargin{:});
@@ -130,10 +127,7 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
         % convert to 8-bit image
         slideOverviewImage = uint8(slideOverviewImage / 2 ^ 8);
 
-        if DOWNSAMPLE
-            %downsample the image 2x
-            slideOverviewImage = imresize(slideOverviewImage, 0.5);
-        end
+        slideOverviewImage = imresize(slideOverviewImage, p.Results.downsample);
 
         % separate the filename from the extension
         [filepath, filenameroot, ext] = fileparts(metaData.Filename);
