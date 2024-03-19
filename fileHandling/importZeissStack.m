@@ -18,6 +18,7 @@ else
     channel = 0;
 end
 
+% define output variables as empty arrays
 scenes = [];
 imageInfo = [];
 
@@ -46,13 +47,15 @@ imageInfo.zoom = zoomInfo;
 imageInfo.LaserPower = laserPower;
 imageInfo.LaserWL = laserWL;
 imageInfo.acqDate = dateInfo;
-
 nImagesInStack = imageInfo.SizeZ;
 nSCENES = imageInfo.SeriesCount;
+
+
 nImagesTotal = nImagesInStack * nSCENES;
 
 disp(['Loaded czi file ' fileName ' with ' num2str(nSCENES) ' slices/series']);
-images = data{1}(:, 1); % keep only the image data
+
+%images = data{1}(:, 1); % keep only the image data
 
 % segreagte the images into appropriate stacks (per scene) 
 
