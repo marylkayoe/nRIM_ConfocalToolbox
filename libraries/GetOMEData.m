@@ -174,13 +174,13 @@ function OMEData = GetOMEData(filename)
             OMEData.Dyes{c} = 'na';
         end
 
-        try
-            OMEData.LaserIntensity{c} = omeMeta.getChannelLightSourceSettingsAttenuation(imageID, c-1);
-        catch
-            msg = 'Readout of Intensity Values failed.';
-            warning(msg);
-            OMEData.LaserIntensity{c} = 'na';
-        end
+        % try
+        %     OMEData.LaserIntensity{c} = omeMeta.getChannelLightSourceSettingsAttenuation(imageID, c-1);
+        % catch
+        %     msg = 'Readout of Intensity Values failed.';
+        %     warning(msg);
+        %     OMEData.LaserIntensity{c} = 'na';
+        % end
 
     end
 
@@ -192,30 +192,30 @@ function OMEData = GetOMEData(filename)
     OMEData.LaserID = {};
     OMEData.LaserPower = {};
 
-    % get all instrument IDs
-    for num = 1: OMEData.NumberOfInstruments
-        OMEData.InstrumentID{num} = omeMeta.getInstrumentID(num-1);
-        OMEData.NumberofLightsources{num} = omeMeta.getLightSourceCount(num-1);
-        if omeMeta.getLightSourceCount(num-1) == 0
-            msg = join(['No LightSource found in MetaData for Indstrument: ', num2str(num)]);
-            warning(msg);
-        end
-    end
-
-    for num = 1:OMEData.NumberOfInstruments
-        try
-            OMEData.LaserID{num} = omeMeta.getLaserID(num, OMEData.NumberofLightsources{num});
-        catch
-            OMEData.LaserID{num} = 'na';
-        end
-
-        try
-            OMEData.LaserPower{num} = omeMeta.getLaserPower(num, OMEData.NumberofLightsources{num});
-        catch
-            OMEData.LaserPower{num} = 'na';
-        end
-
-    end
+    % % get all instrument IDs
+    % for num = 1: OMEData.NumberOfInstruments
+    %     OMEData.InstrumentID{num} = omeMeta.getInstrumentID(num-1);
+    %     OMEData.NumberofLightsources{num} = omeMeta.getLightSourceCount(num-1);
+    %     if omeMeta.getLightSourceCount(num-1) == 0
+    %         msg = join(['No LightSource found in MetaData for Indstrument: ', num2str(num)]);
+    %         warning(msg);
+    %     end
+    % end
+    % 
+    % for num = 1:OMEData.NumberOfInstruments
+    %     try
+    %         OMEData.LaserID{num} = omeMeta.getLaserID(num, OMEData.NumberofLightsources{num});
+    %     catch
+    %         OMEData.LaserID{num} = 'na';
+    %     end
+    % 
+    %     try
+    %         OMEData.LaserPower{num} = omeMeta.getLaserPower(num, OMEData.NumberofLightsources{num});
+    %     catch
+    %         OMEData.LaserPower{num} = 'na';
+    %     end
+    % 
+    % end
 
     % close BioFormats Reader
     reader.close()

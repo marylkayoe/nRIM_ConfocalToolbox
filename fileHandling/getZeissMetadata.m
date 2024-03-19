@@ -1,70 +1,79 @@
 function [laserWL, laserPower, zoomInfo, dateInfo] = getZeissMetadata(metadata)
-%% zoom factor
-
-zoomInfoKey = 'Global Information|Image|Channel|LaserScanInfo|ZoomX #1';
-if metadata.containsKey(zoomInfoKey)
-    zoomInfoStr = metadata.get(zoomInfoKey);
-
-    zoomInfo = str2num(zoomInfoStr);
+% getZeissMetadata - extract metadata from the metadata section of a zeiss image file
+% the metadata information is in the form of a hashtable
+% note that the values are strings and need to be converted to numbers
+% also: currently this only works correctly for files with a single channel
 
 
-%    disp(['Zoom Info: ', zoomInfo]);
-else
-    disp('Zoom information not found in metadata.');
+
+
+% initialize return variables
+laserWL = [];
+laserPower = [];
+zoomInfo = [];
+dateInfo = [];
+
+% check if metadata is a hashtable
+if ~isa(metadata, 'java.util.Hashtable')
+    warning('metadata is not a java.util.Hashtable, returning empty metadata');
+    return
+end
+
+% Find all the keys in the metadata:
+keys = metadata.keySet().toArray();
+
+% how many keys there are
+nKEYS = length(keys);
+
+% initialize a cell array to store the key strings
+% size: nKEYS rows, 1 column
+
+keystrings = cell(nKEYS, 1);
+
+%loop through the keys and store the strings in the cell array
+for i = 1:nKEYS
+    keystrings{i} = keys(i);
 end
 
 
-% %% Objective
-% 
-% objInfoKey = 'Global Experiment|AcquisitionBlock|AcquisitionModeSetup|Objective #1';
-% if metadata.containsKey(objInfoKey)
-%     objInfo = metadata.get(objInfoKey);
-%     disp(['Obj Info: ', objInfo]);
-% else
-%     disp('Obj information not found in metadata.');
-% end
+% find the key for the zoom information
+% 1. find all the keys that contain the word 'ZoomX'
+zoomKeys = cellfun(@(x) contains(x, 'ZoomX'), keystrings);
+% 2. find the index of the first key that contains the word 'ZoomX'
+zoomKeyIndex = find(zoomKeys, 1);
+% 3. get the key string
+zoomKey = keystrings{zoomKeyIndex};
+% 4. get the value of the key
+zoomInfoStr = metadata.get(zoomKey);
+% 5. convert the value to a number
+zoomInfo = str2num(zoomInfoStr);
 
+% same for laser power
+laserPowerKeys = cellfun(@(x) contains(x, 'LaserPower'), keystrings);
+laserPowerKeyIndex = find(laserPowerKeys, 1);
+laserPowerKey = keystrings{laserPowerKeyIndex};
+laserPowerStr = metadata.get(laserPowerKey);
+laserPower = str2num(laserPowerStr);
 
-%% Laser power
+% same for laser wavelength
+laserWLKeys = cellfun(@(x) contains(x, 'Wavelength'), keystrings);
+laserWLKeyIndex = find(laserWLKeys, 1);
+laserWLKey = keystrings{laserWLKeyIndex};
+laserWLStr = metadata.get(laserWLKey);
+laserWLm = str2double(laserWLStr); % this is in meters :)
+laserWL = round(laserWLm * 1e9); % convert to nm
 
-laserPowerKey = 'Global Experiment|AcquisitionBlock|Laser|LaserPower #1';
-if metadata.containsKey(laserPowerKey)
-    laserPowerStr = metadata.get(laserPowerKey);
-    laserPower = str2num(laserPowerStr);
-   
-   % disp(['Laser power: ', laserPowerInfo]);
-else
-    disp('Obj information not found in metadata.');
-end
+% same for date created
+dateKeys = cellfun(@(x) contains(x, 'CreationDate'), keystrings);
+dateKeyIndex = find(dateKeys, 1);
+dateKey = keystrings{dateKeyIndex};
+dateInfo = metadata.get(dateKey);
+% in the date string, we want to extract the date only
+% we want to extract the date only by splitting at 'T'
+dateInfo = strsplit(dateInfo, 'T');
+dateInfo = dateInfo{1};
+% timeInfo = dateInfo{2};
 
-
-
-%% Laser wavelength
-
-laserWLkey = 'Global Experiment|AcquisitionBlock|MultiTrackSetup|TrackSetup|Attenuator|Wavelength #1';
-if metadata.containsKey(laserWLkey)
-    laserWLStr = metadata.get(laserWLkey);
-    laserWLm = str2double(laserWLStr);
-    laserWL = round(laserWLm * 1e9); % convert to nm
-   % disp(['Obj Info: ', laserWLinfo]);
-else
-    disp('LaserWL information not found in metadata.');
-end
-% date created:
-% the metadata string is in form "2024-03-15T11:15:38"
-
-dateKey = 'Global Information|Document|CreationDate #1';
-if metadata.containsKey(dateKey)
-    dateInfo = metadata.get(dateKey);
-    % we want to extract the date only by splitting at 'T'
-    dateInfo = strsplit(dateInfo, 'T');
-    dateInfo = dateInfo{1};
-    
-
-
-    
-else
-    disp('Creation information not found in metadata.');
 end
 
 

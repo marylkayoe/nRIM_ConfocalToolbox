@@ -33,3 +33,5 @@ codegen/
 .MATLABDriveTag
 *.czi
 visualization/metadata.txt
+*.png
+*.tiff

@@ -43,7 +43,12 @@ Statistics and Machine Learning Toolbox
 ```
 
 #### Other packages:
- will add here links to other packages that are used in the toolbox
+
+we use bfmatlab, a MATLAB toolbox for reading and writing Bio-Formats data in MATLAB.
+The code is included in this toolbox under libraries/bfmatlab. More info can be found [here](https://docs.openmicroscopy.org/bio-formats/6.3.1/users/matlab/index.html).
+
+
+I will add here links to other packages that are used in the toolbox.
 
 
 ### Installation
@@ -95,13 +100,14 @@ These functions are used to visualize the image data in MATLAB.
 This function is meant for visualizing all slices imaged on a slide.
 The function takes a 3D matrix of the image data and a struct of metadata as input.
 The function will return a figure with a plot of the image data, with slices labelled and a scale bar.
-
-Scale and other information is extracted from the metadata struct.
+If metadata is provided, scale and other information is extracted from it and shown in the figure.
 
 By default the images are shown as std projections, but you can also specify to show max projections by setting the 'maxProject' parameter to true.
 
 You can specify the grid layout of the resulting image so that it matches the physical layout of the slide.
 **note** this works well only if your slide is imaged in a grid pattern with no missing slices.
+
+Finally, the overview image is saved as a tiff file 
 
 **example use** 
 ```matlab

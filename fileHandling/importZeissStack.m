@@ -32,38 +32,28 @@ if ~exist(fileString, 'file')
 end
 
 %% import image stack using bfopen
-[data] = bfopen(fileString);
+[zeissData] = bfopen(fileString);
 
 % check if the data is empty
-if isempty(data)
+if isempty(zeissData)
     warning(['No data found in file ' fileString ', aborting import.']);
     return;
 end
 
 % read metadata to find out how many scenes / positions there are
 imageInfo = GetOMEData(fileString);
-[laserWL, laserPower, zoomInfo, dateInfo] =  getZeissMetadata(data{1, 2}); % the Zeiss-specific data are here
-imageInfo.zoom = zoomInfo;
-imageInfo.LaserPower = laserPower;
-imageInfo.LaserWL = laserWL;
-imageInfo.acqDate = dateInfo;
-nImagesInStack = imageInfo.SizeZ;
+[imageInfo.LaserWL  imageInfo.LaserPower, imageInfo.zoom, imageInfo.acqDate] =  getZeissMetadata(zeissData{1, 2}); % the Zeiss-specific data are here
 nSCENES = imageInfo.SeriesCount;
-
-
-nImagesTotal = nImagesInStack * nSCENES;
-
 disp(['Loaded czi file ' fileName ' with ' num2str(nSCENES) ' slices/series']);
 
-%images = data{1}(:, 1); % keep only the image data
 
-% segreagte the images into appropriate stacks (per scene) 
 
 
 % reformat into cell array for easier handling later
+
 scenes = cell(1, nSCENES);
 for i = 1:nSCENES
-  scenes{i} = cat(3, data{i}{:, 1});
+  scenes{i} = cat(3, zeissData{i}{:, 1});
 end
 
 
