@@ -111,7 +111,8 @@ Finally, the overview image is saved as a png file, with the same name as the in
 By default the overview image is downsampled 2x to reduce file size. 
 
 Example output image:
-![example output](assets/output-overviewthumnails.pngoutput-overviewthumbnails.png)
+![example output](assets/output-overviewthumnails.png)
+
 
 
 
