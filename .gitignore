@@ -34,3 +34,4 @@ codegen/
 *.czi
 visualization/metadata.txt
 *.tiff
+data/IHCT_THT48_slice01-03_IHCT05_10x08x_overview_tile_stacks_A488_brainstem_overview.png

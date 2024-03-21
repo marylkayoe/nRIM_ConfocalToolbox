@@ -18,6 +18,7 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
       - [importZeissStack.m](#importzeissstackm)
       - [getZeissMetadata.m](#getzeissmetadatam)
     - [Visualization](#visualization)
+      - [makeSlideOverviewFromFile.m](#makeslideoverviewfromfilem)
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
 
 ## Getting Started
@@ -95,6 +96,15 @@ The function returns a struct containing the metadata.
 
 ### Visualization
 These functions are used to visualize the image data in MATLAB.
+
+#### makeSlideOverviewFromFile.m
+A wrapper function that reads a ZEISS CZI file using *importZeissStack.m* -function  and then calls makeSlideOverviewPlot.m to visualize the data.
+
+**example use** 
+```matlab
+makeSlideOverviewFromFile(datafolderpath, filename, 'gridLayout', [2, 4], 'downsample', 0.2); %result will be 20% of original size
+```
+
 
 #### makeSlideOverviewPlot.m
 This function is meant for visualizing all slices imaged on a slide.
