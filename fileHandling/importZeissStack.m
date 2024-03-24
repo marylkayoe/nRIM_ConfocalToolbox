@@ -56,6 +56,8 @@ for i = 1:nSCENES
   scenes{i} = cat(3, zeissData{i}{:, 1});
 end
 
+% convert to double
+scenes = cellfun(@double, scenes, 'UniformOutput', false);
 
 
 

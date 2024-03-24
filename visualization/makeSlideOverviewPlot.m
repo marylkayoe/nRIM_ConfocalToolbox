@@ -3,6 +3,10 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
     % and will  generate a collage image where each of the stacks in the slide data
     % is presented by a single image.
 
+    % IMPORTANT: this is meant to be used with a file where all the stacks have identical dimensions
+
+    % if you want to use this with a file where the stacks have different dimensions, there will be another function for that
+
     % input arguments:
     % slideImageData: a cell array, each cell contains the image data for a single stack
     % varargin: optional arguments given  as 'parameter', value pairs
