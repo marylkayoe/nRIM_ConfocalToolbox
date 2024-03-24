@@ -21,7 +21,6 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
       - [makeSlideOverviewFromFile.m](#makeslideoverviewfromfilem)
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
       - [Generating Thumbnails from Image Stacks](#generating-thumbnails-from-image-stacks)
-      - [Example Thumbnails:](#example-thumbnails)
 
 ## Getting Started
 
@@ -168,8 +167,7 @@ THimage = makeThumbnailFromImageStack(imageStack, 'method', 'mean');
 THimage = makeThumbnailFromImageStack(imageStack, 'frameIndex', 'middle');
 ```
 
-#### Example Thumbnails:
-
+**example thumbnails** 
 
 ![Example Projection Thumbnail](assets/THimageExample.png)
 
