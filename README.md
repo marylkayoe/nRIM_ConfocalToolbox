@@ -20,9 +20,7 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
     - [Visualization](#visualization)
       - [makeSlideOverviewFromFile.m](#makeslideoverviewfromfilem)
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
-    - [Generating Thumbnails from Image Stacks](#generating-thumbnails-from-image-stacks)
-      - [Function Usage:](#function-usage)
-      - [Parameters:](#parameters)
+      - [Generating Thumbnails from Image Stacks](#generating-thumbnails-from-image-stacks)
       - [Example Thumbnails:](#example-thumbnails)
 
 ## Getting Started
@@ -137,11 +135,21 @@ makeSlideOverviewPlot(scenes, 'metaData', metadata, 'gridLayout', [2, 4], 'maxPr
 
 ```
 
-### Generating Thumbnails from Image Stacks
+#### Generating Thumbnails from Image Stacks
 
 The `makeThumbnailFromImageStack` function allows you to create a thumbnail image from a 3D image stack, such as a confocal or calcium imaging stack. This function provides several options for creating the thumbnail, including the projection method, the specific frame(s) to include, the size of the resulting thumbnail, and whether to maintain the original aspect ratio.
 
-#### Function Usage:
+**Parameters** 
+
+
+- `imageStack`: 3D numeric matrix representing the image stack.
+- `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
+- `frameIndex`: Specifies which frame(s) to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'`.
+- `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
+- `ratio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
+
+
+**example use** 
 
 ```matlab
 % Default usage with STD intensity projection and 512x512 size:
@@ -159,14 +167,6 @@ THimage = makeThumbnailFromImageStack(imageStack, 'method', 'mean');
 % Including only the middle frame of the stack:
 THimage = makeThumbnailFromImageStack(imageStack, 'frameIndex', 'middle');
 ```
-
-#### Parameters:
-
-- `imageStack`: 3D numeric matrix representing the image stack.
-- `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
-- `frameIndex`: Specifies which frame(s) to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'`.
-- `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
-- `ratio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
 
 #### Example Thumbnails:
 
