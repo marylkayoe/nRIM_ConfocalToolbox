@@ -146,6 +146,8 @@ The `makeThumbnailFromImageStack` function allows you to create a thumbnail imag
 - `frameIndex`: Specifies which frame(s) to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'`.
 - `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
 - `ratio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
+- `imageDescriptor`: Optional string to include in the title of the thumbnail image. Default is an empty string. long filenames will not look good.
+
 
 
 **example use** 

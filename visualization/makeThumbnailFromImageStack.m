@@ -8,6 +8,8 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
 
     % thumbnails will be 8-bit grayscale images and histogram adjusted for better visualization
 
+    % optional parameter 'imageDescriptor' (string) can be used to add a title to the thumbnail image
+
     % example uses: 
     % generate 512x512 (default) thumbnail:
     % THimage = makeThumbnailFromImageStack(imageStack);
@@ -41,6 +43,7 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     addParameter(p, 'newHeight', [512], @isnumeric);
     %optional input - image ratio, default is 'square' for 1:1 aspect ratio, give 'original' for original aspect ratio
     addParameter(p, 'ratio', 'square', @ischar);
+    addParameter(p, 'imageDescriptor', '', @ischar);
 
     parse(p, imageStack, varargin{:});
 
@@ -120,4 +123,15 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     % normalize the image and convert to RGB
     THimage = mat2gray(THimage);
     THimage = repmat(THimage, [1 1 3]);
+
+    % add the image descriptor if not empty
+    if ~isempty(p.Results.imageDescriptor)
+        % truncate the descriptor if it is too long
+        if length(p.Results.imageDescriptor) > 30
+            imageDescriptor = p.Results.imageDescriptor(1:30);
+        else
+            imnageDescriptor =  p.Results.imageDescriptor;
+        end
+        THimage = insertText(THimage, [1 1], imageDescriptor, 'FontSize', 12, 'BoxColor', 'black', 'BoxOpacity', 0.4, 'TextColor', 'white');
+    end
 end
