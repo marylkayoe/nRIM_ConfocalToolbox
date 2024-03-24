@@ -1,4 +1,4 @@
-function adjustedImage = adjustHistogram(imageStack)
+function adjustedImage = adjustHistogram(imageStack, varargin)
 %ADJUSTHISTOGRAM Adjust the histogram of an image.
 %   ADJUSTEDIMAGE = ADJUSTHISTOGRAM(imageStack) adjusts the histogram of the
 %   input image, IMAGE, and returns the adjusted image, ADJUSTEDIMAGE. The
@@ -7,7 +7,15 @@ function adjustedImage = adjustHistogram(imageStack)
 %   65535, with 16-bit images. 
 
 
-%imageStack = double(imageStack);
+% Parse the input arguments
+p = inputParser;
+p.addRequired('imageStack', @isnumeric);
+p.addParameter('LowHigh', [0.1, 0.99], @isnumeric);
+p.parse(imageStack, varargin{:});
+
+% Pre-allocate the adjusted image
+adjustedImage = zeros(size(imageStack), 'like', imageStack);
+
 
 % Compute the stretchlim values based on the whole stack
 lowHigh = stretchlim(imageStack, [0.1, 0.99])';

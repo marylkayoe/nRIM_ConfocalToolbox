@@ -40,6 +40,7 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
     p.addParameter('gridLayout', [], @isnumeric);
     p.addParameter('metaData', [], @isstruct)
     p.addParameter('downsample', 0.5, @isnumeric); % downsample the image by this factor (0.5 = half size)
+    p.addParameter('channel', '', @ischar); % which channel this image is from, used only for filename
 
     % parse the input
     p.parse(slideImageData, varargin{:});
@@ -135,6 +136,8 @@ function slideOverviewImage = makeSlideOverviewPlot(slideImageData, varargin)
 
         % separate the filename from the extension
         [filepath, filenameroot, ext] = fileparts(metaData.Filename);
+        filenameroot = [filenameroot '-' p.Results.channel];
+
         pngFileName = [filenameroot '_overview.png'];
         savePath = fullfile(metaData.FilePath, pngFileName);
         imwrite(slideOverviewImage, savePath, 'png');

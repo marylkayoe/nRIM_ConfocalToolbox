@@ -10,7 +10,7 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
 
     % optional parameter 'imageDescriptor' (string) can be used to add a title to the thumbnail image
 
-    % example uses: 
+    % example uses:
     % generate 512x512 (default) thumbnail:
     % THimage = makeThumbnailFromImageStack(imageStack);
 
@@ -34,7 +34,7 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     %required input - image stack, 3D matrix
     addRequired(p, 'imageStack', @isnumeric);
     %optional input - method to make thumbnail, default is 'std'
-    % other options 'mean', 'max', 'min'
+    % other options 'mean', 'max', 'min', 'sum'
     addParameter(p, 'method', 'std', @ischar);
     %optional input - frame index to use, default is 'all' frames
     % other options 'first', 'last', 'middle', 'random'
@@ -42,13 +42,25 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     %optional input - X size of thumbnail, default is 512 for 512x512 pixels
     addParameter(p, 'newHeight', [512], @isnumeric);
     %optional input - image ratio, default is 'square' for 1:1 aspect ratio, give 'original' for original aspect ratio
-    addParameter(p, 'ratio', 'square', @ischar);
+    addParameter(p, 'aspectRatio', 'square', @ischar);
+    %optional input - image descriptor, default is empty; the string will be added to the thumbnail image; max 30 characters
+    % could be e.g. SLIDEID-CHANNELID
     addParameter(p, 'imageDescriptor', '', @ischar);
 
     parse(p, imageStack, varargin{:});
 
+    % initialize empty thumbnail 
+    THimage = [];
+
+    % validate the image stack
+
     % get the size of the image stack
     [height, width, numFrames] = size(imageStack);
+
+    if isempty(imageStack) || numFrames < 1
+        warning('Image stack must have at least one image, aborting thumbnail generation');
+        return;
+    end
 
     % if we are not taking all frames, select the frame
     if ~strcmp(p.Results.frameIndex, 'all')
@@ -74,7 +86,9 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     % select the frame(s) for thumbnailing
     imageStack = imageStack(:, :, frameIndex);
 
+    %% this is the main part of the function
     % make the thumbnail image
+
     switch p.Results.method
         case 'std'
             % make sure the image stack is double
@@ -92,10 +106,20 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
             THimage = max(imageStack, [], 3);
         case 'min'
             % take the min intensity projection
+            % this is useful mostly only with transmission light (e.g. DIC, brighfield) images
             THimage = min(imageStack, [], 3);
+        case 'sum'
+            % this is useful when there is not much labeling (e.g. only some axons)
+            THimage = max(imageStack, [], 3);
+            % adjist the histogram so that we see both bringht and dark areas
+            
+            THimage = adjustHistogram(THimage, 'lowHigh', [0.1 0.9]);
+            
+            
         otherwise
             warning('Invalid thumbnailing method, defaulting to "std"');
             % take the standard deviation intensity projection
+
             THimage = std(imageStack, [], 3);
     end
 
@@ -104,21 +128,19 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     sizeX = p.Results.newHeight;
     sizeY = p.Results.newHeight;
 
-
-    if strcmp(p.Results.ratio, 'original')
-            % figure out the original aspect ratio
-        ratio = width / height;
+    if strcmp(p.Results.aspectRatio, 'original')
+        % figure out the original aspect ratio
+        aspectRatio = width / height;
         % figure out the new X and Y sizes based on sizeX
         % how much X will change from original:
         deltaX = sizeX - width;
         % how much Y size will change from original if aspect ratio is maintained:
-        deltaY = deltaX / ratio;
+        deltaY = deltaX / aspectRatio;
         % new Y size
         sizeY = height + deltaY;
     end
 
-
-        THimage = imresize(THimage, [sizeY sizeX]);
+    THimage = imresize(THimage, [sizeY sizeX]);
 
     % normalize the image and convert to RGB
     THimage = mat2gray(THimage);
@@ -130,8 +152,10 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
         if length(p.Results.imageDescriptor) > 30
             imageDescriptor = p.Results.imageDescriptor(1:30);
         else
-            imnageDescriptor =  p.Results.imageDescriptor;
+            imageDescriptor = p.Results.imageDescriptor;
         end
+
         THimage = insertText(THimage, [1 1], imageDescriptor, 'FontSize', 12, 'BoxColor', 'black', 'BoxOpacity', 0.4, 'TextColor', 'white');
     end
+
 end

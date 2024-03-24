@@ -145,7 +145,7 @@ The `makeThumbnailFromImageStack` function allows you to create a thumbnail imag
 - `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
 - `frameIndex`: Specifies which frame(s) to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'`.
 - `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
-- `ratio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
+- `aspectRatio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
 - `imageDescriptor`: Optional string to include in the title of the thumbnail image. Default is an empty string. long filenames will not look good.
 
 
@@ -160,7 +160,7 @@ THimage = makeThumbnailFromImageStack(imageStack);
 THimage = makeThumbnailFromImageStack(imageStack, 'newHeight', 256);
 
 % Generating a thumbnail with the original aspect ratio scaled down to 512 pixels wide:
-THimage = makeThumbnailFromImageStack(imageStack, 'ratio', 'original');
+THimage = makeThumbnailFromImageStack(imageStack, 'aspectRatio', 'original');
 
 % Using mean intensity projection:
 THimage = makeThumbnailFromImageStack(imageStack, 'method', 'mean');
@@ -175,11 +175,11 @@ THimage = makeThumbnailFromImageStack(imageStack, 'frameIndex', 'middle');
 
 
 ```matlab
-A: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'ratio', 'original', 'sizeX', 256);
-B: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'ratio', 'square', 'newHeight', 256);
-C: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'first', 'ratio', 'square', 'newHeight', 256);
-D: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'middle', 'ratio', 'square', 'newHeight', 256);
-E: makeThumbnailFromImageStack(oneImage, 'method', 'max', 'frameIndex', 'all', 'ratio', 'square', 'newHeight', 256);
+A: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'aspectRatio', 'original', 'sizeX', 256);
+B: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'aspectRatio', 'square', 'newHeight', 256);
+C: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'first', 'aspectRatio', 'square', 'newHeight', 256);
+D: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'middle', 'aspectRatio', 'square', 'newHeight', 256);
+E: makeThumbnailFromImageStack(oneImage, 'method', 'max', 'frameIndex', 'all', 'aspectRatio', 'square', 'newHeight', 256);
 
 ```
 
