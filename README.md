@@ -170,8 +170,18 @@ THimage = makeThumbnailFromImageStack(imageStack, 'frameIndex', 'middle');
 
 #### Example Thumbnails:
 
-Please replace `[URL]` with the actual URL of your example images.
 
-![STD Projection Thumbnail](assets/THimageExample.png)
+![Example Projection Thumbnail](assets/THimageExample.png)
 
-This function is versatile and can be tailored to meet various needs, whether for quick visualization, data exploration, or creating a dataset for further analysis.
+
+```matlab
+A: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'ratio', 'original', 'sizeX', 256);
+B: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'all', 'ratio', 'square', 'newHeight', 256);
+C: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'first', 'ratio', 'square', 'newHeight', 256);
+D: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'middle', 'ratio', 'square', 'newHeight', 256);
+E: makeThumbnailFromImageStack(oneImage, 'method', 'max', 'frameIndex', 'all', 'ratio', 'square', 'newHeight', 256);
+
+```
+
+
+
