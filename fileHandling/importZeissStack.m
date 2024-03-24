@@ -83,6 +83,8 @@ function [scenes, imageInfo] = importZeissStack(dataPath, fileName, varargin)
 
         imageInfo.Dyes = imageInfo.Dyes{channel};
 
+    else
+        channelRows = 1:nImagesInStack;
     end
 
     % reformat into cell array for easier handling later
