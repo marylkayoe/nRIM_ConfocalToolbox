@@ -148,7 +148,7 @@ The `makeThumbnailFromImageStack` function allows you to create a thumbnail imag
 THimage = makeThumbnailFromImageStack(imageStack);
 
 % Generating a 256x256 thumbnail:
-THimage = makeThumbnailFromImageStack(imageStack, 'sizeX', 256);
+THimage = makeThumbnailFromImageStack(imageStack, 'newHeight', 256);
 
 % Generating a thumbnail with the original aspect ratio scaled down to 512 pixels wide:
 THimage = makeThumbnailFromImageStack(imageStack, 'ratio', 'original');
@@ -165,7 +165,7 @@ THimage = makeThumbnailFromImageStack(imageStack, 'frameIndex', 'middle');
 - `imageStack`: 3D numeric matrix representing the image stack.
 - `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
 - `frameIndex`: Specifies which frame(s) to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'`.
-- `sizeX`: Desired width of the thumbnail in pixels. Default is 512. The height (`sizeY`) will be calculated based on the `ratio` parameter.
+- `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
 - `ratio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
 
 #### Example Thumbnails:
