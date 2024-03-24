@@ -63,27 +63,38 @@ if strcmp(ext, '.czi')
 
         channelInfo = imageInfo.Dyes;
     end
-    imageStack = imageStack{1};
+    %imageStack = imageStack{1};
 else
     % read the normal image stack
     imageStack = imread(filePath);
     channelInfo = [];
 
 end
-
+nSERIES = imageInfo.SeriesCount;
 % generate image descriptor - from filename.
 % characters up to second separator (-) is presumed SLIDEID
 SLIDEID = getSlideIDfromFilename(p.Results.fileName);
 
 if isempty(p.Results.imageDescriptor)
-    imageDescriptor = SLIDEID;
+    imageDescriptorRoot = SLIDEID;
 else
-    imageDescriptor = [p.Results.imageDescriptor '-' SLIDEID];
+    imageDescriptorRoot = [p.Results.imageDescriptor '-' SLIDEID];
 end
 
-imageDescriptor = [imageDescriptor ' - ' channelInfo];
+%imageDescriptor = [imageDescriptor '-' channelInfo];
 
 % make the thumbnail
-THimage = makeThumbnailFromImageStack(imageStack, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'newHeight', p.Results.newHeight, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor', imageDescriptor);
+for series = 1:nSERIES
+    imageDescriptor = [imageDescriptorRoot '-' num2str(series) ' - ' channelInfo];
+    THimages{series} = makeThumbnailFromImageStack(imageStack{series}, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'newHeight', p.Results.newHeight, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor', imageDescriptor);
+end
+
+if nSERIES ==1
+    THimage = THimages{1};
+else
+    THimage = makeThumbnailMontage(THimages);
+end
+
+end
 
 
