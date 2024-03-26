@@ -149,8 +149,8 @@ function THimage = makeThumbnailFromImageStack(imageStack, varargin)
     % add the image descriptor if not empty
     if ~isempty(p.Results.imageDescriptor)
         % truncate the descriptor if it is too long
-        if length(p.Results.imageDescriptor) > 50
-            imageDescriptor = p.Results.imageDescriptor(1:50);
+        if length(p.Results.imageDescriptor) > 80
+            imageDescriptor = p.Results.imageDescriptor(1:80);
         else
             imageDescriptor = p.Results.imageDescriptor;
         end

@@ -63,14 +63,20 @@ if strcmp(ext, '.czi')
 
         channelInfo = imageInfo.Dyes;
     end
-    %imageStack = imageStack{1};
+
+    nSERIES = imageInfo.SeriesCount;
+
 else
     % read the normal image stack
     imageStack = imread(filePath);
+    imageStack = {imageStack}; % pack it in cell so that it looks the same as zeiss files
     channelInfo = [];
+    imageInfo = [];
+
+    nSERIES = 1;
 
 end
-nSERIES = imageInfo.SeriesCount;
+
 % generate image descriptor - from filename.
 % characters up to second separator (-) is presumed SLIDEID
 SLIDEID = getSlideIDfromFilename(p.Results.fileName);

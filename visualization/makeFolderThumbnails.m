@@ -38,28 +38,38 @@ folderTHimage = [];
         return;
     end
 
-    % Find CZI files in the specified folder
-    cziFiles = dir(fullfile(dataFolder, '*.czi'));
-    numFiles = numel(cziFiles);
+    % Find files with either .czi or .tif extension
 
-    if numFiles == 0
-        disp('No CZI files found in the specified folder.');
+
+
+    cziFiles = dir(fullfile(dataFolder, '*.czi'));
+    numCZIfiles = numel(cziFiles);
+
+    tiffFiles = dir(fullfile(dataFolder, '*.tif'));
+    numTIFfiles = numel(tiffFiles);
+
+    if (numCZIfiles + numTIFfiles) == 0
+        disp('No CZI or TIF files found in the specified folder.');
         return;
     end
 
+    %combine tif and czi filenames into one array
+    imageFiles = [cziFiles; tiffFiles];
+    numImageFiles = numel(imageFiles);
+
     % Preallocate array for thumbnail images
-    THimages = cell(numFiles, 1);
+    THimages = cell(numImageFiles, 1);
     figure('Visible', 'off'); % Create a figure for montage creation, but do not display it
 
-    for i = 1:numFiles
+    for i = 1:numImageFiles
         % Construct the full file path
-        filePath = fullfile(cziFiles(i).folder, cziFiles(i).name);
+        filePath = fullfile(imageFiles(i).folder, imageFiles(i).name);
 
-        SLIDEID = getSlideIDfromFilename(cziFiles(i).name);
-        imageDescriptor = cziFiles(i).name;
+        SLIDEID = getSlideIDfromFilename(imageFiles(i).name);
+        imageDescriptor = imageFiles(i).name;
         
         % Generate thumbnail image for the current file
-        THimage = makeThumbnailFromFile(dataFolder, cziFiles(i).name, 'newHeight', p.Results.newHeight, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor',imageDescriptor, 'channel', p.Results.channel);
+        THimage = makeThumbnailFromFile(dataFolder, imageFiles(i).name, 'newHeight', p.Results.newHeight, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor',imageDescriptor, 'channel', p.Results.channel);
         
         % Store the thumbnail image
         THimages{i} = THimage;
@@ -74,5 +84,8 @@ folderTHimage = [];
     imwrite(THmontage, outputFileName, 'png');
     disp(['Thumbnail montage saved as: ', outputFileName]);
 
- 
+   % folderTHimage = im2gray(THmontage);
+    %folderTHimage = mat2gray(THmontage);
+    folderTHimage = repmat(THmontage, [1 1 3]);
+    folderTHimage = im2gray(folderTHimage);
 end
