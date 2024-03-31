@@ -19,38 +19,41 @@ function folderTHimage = makeFolderThumbnails(dataFolder, varargin)
 
 % channel - channel to be used for creating the thumbnail image; default is 1. Note if the image has only one channel, this argument is ignored
 
-    % Parse optional arguments (like output size or specific file extensions)
-    p = inputParser;
-    addRequired(p, 'dataFolder', @ischar);
-    addParameter(p, 'method', 'std', @(x) ischar(x) && ismember(x, {'std', 'max', 'min', 'mean', 'sum'}));
-    addParameter(p, 'frameIndex', 'all', @(x) ischar(x) && ismember(x, {'all', 'first', 'last', 'middle', 'random'}));
-    addParameter(p, 'newHeight', 512, @(x) isnumeric(x) && x > 0);
-    addParameter(p, 'aspectRatio', 'square', @(x) ischar(x) && ismember(x, {'original', 'square'}));
-    addParameter(p, 'imageDescriptor', '', @(x) ischar(x));
-    addParameter(p, 'fileType', '', @(x) ischar(x));
-    addParameter(p, 'channel', 1, @(x) isnumeric(x) && x > 0);
+% Parse optional arguments (like output size or specific file extensions)
+p = inputParser;
+addRequired(p, 'dataFolder', @ischar);
+addParameter(p, 'method', 'std', @(x) ischar(x) && ismember(x, {'std', 'max', 'min', 'mean', 'sum'}));
+addParameter(p, 'frameIndex', 'all', @(x) ischar(x) && ismember(x, {'all', 'first', 'last', 'middle', 'random'}));
+addParameter(p, 'newHeight', 512, @(x) isnumeric(x) && x > 0);
+addParameter(p, 'aspectRatio', 'square', @(x) ischar(x) && ismember(x, {'original', 'square'}));
+addParameter(p, 'imageDescriptor', '', @(x) ischar(x));
+addParameter(p, 'fileType', '', @(x) ischar(x));
+addParameter(p, 'channel', 1, @(x) isnumeric(x) && x > 0);
 
-    parse(p, dataFolder, varargin{:});
+parse(p, dataFolder, varargin{:});
 
 folderTHimage = [];
 
-    % check if the dataFolder exists
-    if ~isfolder(dataFolder)
-        disp('The specified folder can not be found, aborting.');
-        return;
-    end
+% check if the dataFolder exists
+if ~isfolder(dataFolder)
+    disp('The specified folder can not be found, aborting.');
+    return;
+end
 
-    % Find files with either .czi or .tif extension
-    cziFiles = dir(fullfile(dataFolder, '*.czi'));
-    numCZIfiles = numel(cziFiles);
+% Find files with either .czi or .tif extension
+cziFiles = dir(fullfile(dataFolder, '*.czi'));
+numCZIfiles = numel(cziFiles);
 
-    tiffFiles = dir(fullfile(dataFolder, '*.tif'));
-    numTIFfiles = numel(tiffFiles);
+tiffFiles = dir(fullfile(dataFolder, '*.tif'));
+numTIFfiles = numel(tiffFiles);
 
-    if (numCZIfiles + numTIFfiles) == 0
-        disp('No CZI or TIF files found in the specified folder.');
-        return;
-    end
+if (numCZIfiles + numTIFfiles) == 0
+    disp('No CZI or TIF files found in the specified folder.');
+    return;
+end
+
+if isempty (p.Results.fileType)
+else
 
     % if we specified czi or tif, remove the other type
     if p.Results.fileType == 'czi'
@@ -59,39 +62,40 @@ folderTHimage = [];
         cziFiles = [];
     end
 
-    %combine tif and czi filenames into one array
-    imageFiles = [cziFiles; tiffFiles];
-    numImageFiles = numel(imageFiles);
+end
+%combine tif and czi filenames into one array
+imageFiles = [cziFiles; tiffFiles];
+numImageFiles = numel(imageFiles);
 
-    % Preallocate array for thumbnail images
-    THimages = cell(numImageFiles, 1);
-    figure('Visible', 'off'); % Create a figure for montage creation, but do not display it
+% Preallocate array for thumbnail images
+THimages = cell(numImageFiles, 1);
+figure('Visible', 'off'); % Create a figure for montage creation, but do not display it
 
-    for i = 1:numImageFiles
-        % Construct the full file path
-        filePath = fullfile(imageFiles(i).folder, imageFiles(i).name);
+for i = 1:numImageFiles
+    % Construct the full file path
+    filePath = fullfile(imageFiles(i).folder, imageFiles(i).name);
 
-        SLIDEID = getSlideIDfromFilename(imageFiles(i).name);
-        imageDescriptor = imageFiles(i).name;
-        
-        % Generate thumbnail image for the current file
-        THimage = makeThumbnailFromFile(dataFolder, imageFiles(i).name, 'newHeight', p.Results.newHeight, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor',imageDescriptor, 'channel', p.Results.channel);
-        
-        % Store the thumbnail image
-        THimages{i} = THimage;
-    end
+    SLIDEID = getSlideIDfromFilename(imageFiles(i).name);
+    imageDescriptor = imageFiles(i).name;
 
-    % Create a montage of all thumbnails
-    THmontage = makeThumbnailMontage(THimages);
-    %montage(THimages, 'Size', [ceil(sqrt(numFiles)), ceil(sqrt(numFiles))], 'BorderSize', [10 10], 'BackgroundColor', 'black');
+    % Generate thumbnail image for the current file
+    THimage = makeThumbnailFromFile(dataFolder, imageFiles(i).name, 'newHeight', p.Results.newHeight, 'method', p.Results.method, 'frameIndex', p.Results.frameIndex, 'aspectRatio', p.Results.aspectRatio, 'imageDescriptor',imageDescriptor, 'channel', p.Results.channel);
 
-    % Save the montage to a PNG file
-    outputFileName = fullfile(dataFolder, 'thumbnails_montage.png');
-    imwrite(THmontage, outputFileName, 'png');
-    disp(['Thumbnail montage saved as: ', outputFileName]);
+    % Store the thumbnail image
+    THimages{i} = THimage;
+end
 
-   % folderTHimage = im2gray(THmontage);
-    %folderTHimage = mat2gray(THmontage);
-    folderTHimage = repmat(THmontage, [1 1 3]);
-    folderTHimage = im2gray(folderTHimage);
+% Create a montage of all thumbnails
+THmontage = makeThumbnailMontage(THimages);
+%montage(THimages, 'Size', [ceil(sqrt(numFiles)), ceil(sqrt(numFiles))], 'BorderSize', [10 10], 'BackgroundColor', 'black');
+
+% Save the montage to a PNG file
+outputFileName = fullfile(dataFolder, 'thumbnails_montage.png');
+imwrite(THmontage, outputFileName, 'png');
+disp(['Thumbnail montage saved as: ', outputFileName]);
+
+% folderTHimage = im2gray(THmontage);
+%folderTHimage = mat2gray(THmontage);
+folderTHimage = repmat(THmontage, [1 1 3]);
+folderTHimage = im2gray(folderTHimage);
 end

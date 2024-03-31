@@ -140,7 +140,7 @@ The thumbnails are collated into a single image, which is saved in the folder as
 Input parameters:
 - `folderPath`: path to the folder containing the images
 - `fileType`: type of files to include. Options are 'czi' and 'tif'. Default is 'czi'.
-- `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
+- `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`. Note that you will need to try out which method works best for your images.
 - `frameIndex`: Specifies which frame is shown in thumbnail to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'` (with the projection).
 - `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
 - `aspectRatio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
@@ -153,6 +153,10 @@ makeFolderThumbnails(datafolderpath, 'fileType', 'czi', 'method', 'mean', 'frame
 ```
 **example thumbnails**
 ![example thumbnails](assets/thumbnails_montage.png)
+
+**NOTE** if your files are different in size or content, the resulting montage will not look good as in this example.
+
+![example thumbnails](assets/thumbnails_montage-sizes.png)
 
 
 #### Generating Thumbnails from Image Stacks

@@ -35,8 +35,12 @@ for i = 1:nRows
                 THimageArray{index} = rgb2gray(THimageArray{index});
             end
 
+            % resize the image to the size of the thumbnails
+            resizedImage = imresize(THimageArray{index}, [height, width]);
+          
+
             % Add the image to the output image
-            THmontage(rowRange, colRange) = THimageArray{index};
+            THmontage(rowRange, colRange) = resizedImage;
         end
 
     end
