@@ -22,6 +22,8 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
       - [makeFolderThumbnails.m](#makefolderthumbnailsm)
       - [Generating Thumbnails from Image Stacks](#generating-thumbnails-from-image-stacks)
+    - [Util](#util)
+      - [generateFilenameFromExpDescriptors.m](#generatefilenamefromexpdescriptorsm)
 
 ## Getting Started
 
@@ -207,6 +209,30 @@ D: makeThumbnailFromImageStack(oneImage, 'method', 'mean', 'frameIndex', 'middle
 E: makeThumbnailFromImageStack(oneImage, 'method', 'max', 'frameIndex', 'all', 'aspectRatio', 'square', 'newHeight', 256);
 
 ```
+
+### Util
+
+Various functions that are generally useful.
+
+#### generateFilenameFromExpDescriptors.m
+This function generates a filename based on the experimental descriptors provided. It's written as a "template" for your use - obviously you need to adjust the details of the function so it matches your naming conventions.
+
+Input parameters, to be given as name-value pairs in the template version:
+- `EXPID`: Experiment ID; required
+- `GROUPID`: Group ID
+- `MOUSEID`: Mouse ID
+- `filetype`: File type; required
+
+The function will return a string with the format 'GROUPID-MOUSEID-EXPID.filetype'.
+
+
+Basic use:
+```matlab
+filename = generateFilenameFromExpDescriptors('EXPID', 'GMD02', 'GROUPID', 'HRM', 'MOUSEID', 'M1234', 'filetype', 'csv');
+```
+
+This will return a string 'GMD02-M1234-HRM.csv'.
+
 
 
 
