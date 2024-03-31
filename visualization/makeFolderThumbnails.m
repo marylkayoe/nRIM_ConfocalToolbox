@@ -1,9 +1,9 @@
 function folderTHimage = makeFolderThumbnails(dataFolder, varargin)
-% generates a collage of thumbnails for all CZI files in the specified folder
+% generates a collage of thumbnails for all files matching the specifications in the specified folder
 % uses makeThumbnailFromFile function to generate thumbnails
 
 % input arguments:
-% dataFolder - path to the folder containing CZI files
+% dataFolder - path to the folder containing the files
 
 % optional arguments:
 % 'method' - method to be used for creating the thumbnail image;
@@ -14,6 +14,7 @@ function folderTHimage = makeFolderThumbnails(dataFolder, varargin)
 
 % newHeight - height of the thumbnail image; default is 512
 % aspectRatio - aspect ratio of the thumbnail image; options: 'original', 'square'; default is 'square'
+% fileTypes - file type to be included in the thumbnail generation; default is 'czi', 'tif' also works
 % imageDescriptor - descriptor for the image; default is empty. Strings longer than 30 characters will be truncated
 
 % channel - channel to be used for creating the thumbnail image; default is 1. Note if the image has only one channel, this argument is ignored
@@ -26,6 +27,7 @@ function folderTHimage = makeFolderThumbnails(dataFolder, varargin)
     addParameter(p, 'newHeight', 512, @(x) isnumeric(x) && x > 0);
     addParameter(p, 'aspectRatio', 'square', @(x) ischar(x) && ismember(x, {'original', 'square'}));
     addParameter(p, 'imageDescriptor', '', @(x) ischar(x));
+    addParameter(p, 'fileType', '', @(x) ischar(x));
     addParameter(p, 'channel', 1, @(x) isnumeric(x) && x > 0);
 
     parse(p, dataFolder, varargin{:});
@@ -39,9 +41,6 @@ folderTHimage = [];
     end
 
     % Find files with either .czi or .tif extension
-
-
-
     cziFiles = dir(fullfile(dataFolder, '*.czi'));
     numCZIfiles = numel(cziFiles);
 
@@ -51,6 +50,13 @@ folderTHimage = [];
     if (numCZIfiles + numTIFfiles) == 0
         disp('No CZI or TIF files found in the specified folder.');
         return;
+    end
+
+    % if we specified czi or tif, remove the other type
+    if p.Results.fileType == 'czi'
+        tiffFiles = [];
+    elseif p.Results.fileType == 'tif'
+        cziFiles = [];
     end
 
     %combine tif and czi filenames into one array

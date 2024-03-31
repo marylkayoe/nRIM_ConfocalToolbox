@@ -20,6 +20,7 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
     - [Visualization](#visualization)
       - [makeSlideOverviewFromFile.m](#makeslideoverviewfromfilem)
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
+      - [makeFolderThumbnails.m](#makefolderthumbnailsm)
       - [Generating Thumbnails from Image Stacks](#generating-thumbnails-from-image-stacks)
 
 ## Getting Started
@@ -130,9 +131,29 @@ Example output image:
 **example use** 
 ```matlab
 makeSlideOverviewPlot(scenes, 'metaData', metadata, 'gridLayout', [2, 4], 'maxProject', true);
- 
-
 ```
+#### makeFolderThumbnails.m
+This function generates thumbnails for images in a folder. Currently only ZEIIS CZI and TIF files are supported.
+The function will read all files in the folder matching the type and generate a thumbnail for each file.
+The thumbnails are collated into a single image, which is saved in the folder as 'thumbnails_montage.png'. Note that only one channel is shown and the result will be grayscale.
+
+Input parameters:
+- `folderPath`: path to the folder containing the images
+- `fileType`: type of files to include. Options are 'czi' and 'tif'. Default is 'czi'.
+- `method`: Method for generating the thumbnail. Options are `'std'`, `'mean'`, `'max'`, `'min'`. Default is `'std'`.
+- `frameIndex`: Specifies which frame is shown in thumbnail to include. Options are `'all'`, `'first'`, `'last'`, `'middle'`, `'random'`. Default is `'all'` (with the projection).
+- `newHeight`: Desired height of the thumbnail in pixels. Default is 512. The width (`newWidth`) will be calculated based on the `ratio` parameter.
+- `aspectRatio`: Aspect ratio of the thumbnail. `'square'` for 1:1 ratio or `'original'` to maintain the original aspect ratio of the image stack. Default is `'square'`.
+- `imageDescriptor`: Optional string to include in the title of the thumbnail image. Default is an empty string. long filenames will not look good.
+- `channel`: Channel to use for the thumbnail. Default is 1. If you specify higher number than the number of channels, the function will use the first channel.
+
+**example use** 
+```matlab
+makeFolderThumbnails(datafolderpath, 'fileType', 'czi', 'method', 'mean', 'frameIndex', 'all', 'aspectRatio', 'original', 'newHeight', 256, 'imageDescriptor', 'BilateralInjection');
+```
+**example thumbnails**
+![example thumbnails](assets/thumbnails_montage.png)
+
 
 #### Generating Thumbnails from Image Stacks
 
