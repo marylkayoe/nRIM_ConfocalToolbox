@@ -156,7 +156,7 @@ makeFolderThumbnails(datafolderpath, 'fileType', 'czi', 'method', 'mean', 'frame
 **example thumbnails**
 ![example thumbnails](assets/thumbnails_montage.png)
 
-**NOTE** if your files are different in size or content, the resulting montage will not look good as in this example.
+**NOTE** if your files are different in size or content, the resulting montage will not look good as in this example. Here the first file is a czi file containing overviews of all slices on a slide, and the rest are variously processed tiff stacks.
 
 ![example thumbnails](assets/thumbnails_montage-sizes.png)
 
