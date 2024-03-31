@@ -68,7 +68,7 @@ if strcmp(ext, '.czi')
 
 else
     % read the normal image stack
-    imageStack = imread(filePath);
+    imageStack = importTiffStack(filePath);
     imageStack = {imageStack}; % pack it in cell so that it looks the same as zeiss files
     channelInfo = [];
     imageInfo = [];
