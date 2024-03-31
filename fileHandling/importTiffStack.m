@@ -1,14 +1,17 @@
-function tiffStack = importTiffStack(filename)
-    % Import and Adjust TIFF Stack
+function tiffStack = importTiffStack(dataFolder, filename)
+    % Import tiff image Stack into a 3D matrix
     %
     % Parameters:
+    % dataFolder - Path to the folder containing the TIFF file
     % filename - Path to the TIFF file
     %
     % Returns:
     % tiffStack - A 3D matrix containing the adjusted TIFF stack
 
+    fullFileName = fullfile(dataFolder, filename);
+
     % Check if the file exists
-    if ~exist(filename, 'file')
+    if ~exist(fullFileName, 'file')
         error('File does not exist: %s', filename);
     end
 
@@ -19,9 +22,9 @@ function tiffStack = importTiffStack(filename)
     end
 
     % Read the TIFF file
-    tiffInfo = imfinfo(filename); % Get information about the TIFF file
+    tiffInfo = imfinfo(fullFileName); % Get information about the TIFF file
     numFrames = numel(tiffInfo);  % Number of frames in the stack
-    firstFrame = imread(filename, 1); % Read the first frame to get dimensions
+    firstFrame = imread(fullFileName, 1); % Read the first frame to get dimensions
     [rows, cols] = size(firstFrame);
 
     % Initialize the stack
@@ -29,10 +32,12 @@ function tiffStack = importTiffStack(filename)
 disp(['Importing TIFF stack...' filename]);
     % Import each frame, display . for every 100 frames
     for i = 1:numFrames
-         tiffStack(:,:,i) = imread(filename, i); % Read each frame
+         tiffStack(:,:,i) = imread(fullFileName, i); % Read each frame
             if mod(i, 100) == 0
                 fprintf('.');
             end
     end
+    fprintf('\n');
+    
 
 end
