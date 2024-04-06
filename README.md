@@ -17,6 +17,7 @@ A collection of tools developed by the nRIM lab for analyzing confocal microscop
     - [FileHandling](#filehandling)
       - [importZeissStack.m](#importzeissstackm)
       - [getZeissMetadata.m](#getzeissmetadatam)
+      - [getMatchingFilenames.m](#getmatchingfilenamesm)
     - [Visualization](#visualization)
       - [makeSlideOverviewFromFile.m](#makeslideoverviewfromfilem)
       - [makeSlideOverviewPlot.m](#makeslideoverviewplotm)
@@ -97,6 +98,13 @@ Currently the metadata includes (not exclusive):
 #### getZeissMetadata.m
 This function parses the hashtable metadata found in the ZEISS CZI file opened with bfopen.
 The function returns a struct containing the metadata. 
+
+#### getMatchingFilenames.m
+This function is used to find files in a folder that match a given pattern. You should adjust the function to match your naming conventions.
+Example use:
+```matlab
+fileNameList = getMatchingFilenames(dataFolder, 'EXPID', 'GMD02', 'SLIDEID', 'THT04', 'SLICEID', 'SLICE04', 'OPTIONAL', '10x08x', 'EXTENSION', '.czi');
+```
 
 ### Visualization
 These functions are used to visualize the image data in MATLAB.
