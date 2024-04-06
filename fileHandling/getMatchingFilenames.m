@@ -77,7 +77,9 @@ function fileNameList = getMatchingFilenames(dataFolder, varargin)
 
     % add the extension to the search string
     searchString = [searchString, p.Results.EXTENSION];
-
+  % Note: two wildcards (*) must be separated by something, 
+  % so a search string like 'GMD1-*-**' will not work.
+  
     msg = sprintf('Searching for files with the pattern: %s in folder %s', searchString, dataFolder);
     disp(msg);
 
