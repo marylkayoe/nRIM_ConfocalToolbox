@@ -88,7 +88,8 @@ else
 end
 
 %imageDescriptor = [imageDescriptor '-' channelInfo];
-
+%preallocate cell array for thumbnail images
+THimages = cell(nSERIES, 1);
 % make the thumbnail
 for series = 1:nSERIES
     imageDescriptor = [imageDescriptorRoot '-' num2str(series) ' - ' channelInfo];
