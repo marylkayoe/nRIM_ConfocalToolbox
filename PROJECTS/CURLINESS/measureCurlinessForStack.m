@@ -5,10 +5,12 @@ meanCurliness = 0;
 stdCurliness = 0;
 REMOVESOMATA = true; % if there are somata in the image stack, they should be removed
 %preprocess image
-processedImageStack = preProcessImageStack(imageStack, imageInfo, REMOVESOMATA);
+processedImageStack = preProcessImageStackForCurliness(imageStack, imageInfo, REMOVESOMATA);
 
 %skeletonize image
 skeletonStack = skeletonizeImageStack(processedImageStack,imageInfo);
+
+figure; imshowpair(stdProjectImage(imageStack), stdProjectImage(skeletonStack));
 %skeleton cleaning
 [cleanSkeleton, branchStats] = cleanSkeletonStack(skeletonStack);
 % get branch lenghts (and prune those too longh or short)
@@ -18,9 +20,9 @@ nBranches = length(branchLengths);
 [branchDistances] = getBranchDistances(branchStats, imageInfo);
 
 figure; 
-imshowpair(std(double(imageStack), [], 3), std(double(cleanSkeleton), [], 3), 'montage');
+imshowpair(std(double(imageStack), [], 3), std(double(cleanSkeleton), [], 3), 'falsecolor');
 
-title([imageInfo.Filename, ' STD proj of image and cleaned-up skeleton']);
+title([cleanUnderscores(imageInfo.Filename), ' STD proj of image and cleaned-up skeleton']);
 medianBranchLength = median (branchLengths, 'omitnan');
 
 straightness = branchDistances ./ branchLengths;
@@ -40,7 +42,7 @@ if 1
     t = tiledlayout(2, 2);
     t.Padding = 'compact';
     t.TileSpacing = 'compact';
-    title(t, imageInfo.Filename);
+    title(t, cleanUnderscores(imageInfo.Filename));
 
     ax = nexttile([1 2]);
     imshowpair(std(double(imageStack), [], 3), std(double(cleanSkeleton), [], 3), 'montage');

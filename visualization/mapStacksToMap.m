@@ -10,7 +10,7 @@ mapPixelSize = imageInfo.ScaleX;
 [mapSizeX, mapSizeY] = size(mapImageStack(:,:,1));
 
 % size of map image in um
-mapUmSizeX = mapSizeX * mapPixelSize;
+mapUmSizeX = mapSizeX * mapPixelSize;z
 mapUmSizeY = mapSizeY * mapPixelSize;
 %
 mapOriginXum = floor(mapCenterXum - (mapUmSizeX/2));

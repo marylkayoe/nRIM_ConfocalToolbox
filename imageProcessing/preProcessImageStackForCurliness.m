@@ -1,5 +1,5 @@
-function processedImageStack = preProcessImageStack(imageStack, imageInfo, REMOVESOMAS)
-
+function processedImageStack = preProcessImageStackForCurliness(imageStack, imageInfo, REMOVESOMAS)
+% 
 % make sure we have even number of slices
 [imgSizeX imgSizeY nSlices]  = size(imageStack);
 if (mod(nSlices, 2)) %it's odd
@@ -9,11 +9,10 @@ end
 %processedImageStack = adjustHistogram(imageStack);
 processedImageStack = imageStack;
 [xyResolution, zResolution] = getPixelResolution(imageInfo);
-%processedImageStack = KuwaharaFourier(processedImageStack, 3);
+%processedImageStack = KuwaharaFourier(processedImageStack, 1);
 noSomaRemoved = processedImageStack;
 if REMOVESOMAS
-
-    [filteredImageStack, somaMask] = removeSomataFromStack(processedImageStack, xyResolution);
+    [filteredImageStack] = removeSomataFromStack(processedImageStack, xyResolution);
     processedImageStack = filteredImageStack;
 end
 

@@ -22,4 +22,4 @@ if isempty(thresholdLevelInd)
 else
     NLEVELS = nVals(thresholdLevelInd);
 end
-%disp(['Thresholding BG with N = ' num2str(NLEVELS) ' levels,  with th target > ' num2str(metricTH)] );
+disp(['Thresholding BG with N = ' num2str(NLEVELS) ' levels,  with th target > ' num2str(metricTH)] );
